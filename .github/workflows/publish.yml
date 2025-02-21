@@ -2,8 +2,8 @@ name: Publish
 
 on:
   push:
-    paths: |
-      ./lead/package.json
+    paths:
+      - lead/package.json
 
 jobs:
   publish:
