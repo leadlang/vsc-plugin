@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - lead/package.json
+      - package.json
 
 jobs:
   publish:
@@ -19,6 +20,11 @@ jobs:
       - run: |
           npm i -g pnpm
           pnpm i
+
+          cd lead
+          pnpm i
+          cd ..
+
           pnpm build:release
         env:
           VSCE_PAT: ${{ secrets.VSCODE_TOKEN }}

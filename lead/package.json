@@ -16,7 +16,7 @@
     "vscode:prepublish": "pnpm compile",
     "compile": "ncc build ./client/src/extension.ts -o ./client/out && ncc build ./server/src/server.ts -o ./server/out",
     "watch": "ncc build ./client/src/extension.ts -o ./client/out -w & ncc build ./server/src/server.ts -o ./server/out -w",
-    "postinstall": "cd client; pnpm install; cd ../server; pnpm install; cd .."
+    "postinstall": "cd client && pnpm install && cd ../server && pnpm install && cd .."
   },
   "categories": [
     "Programming Languages"

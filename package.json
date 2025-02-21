@@ -23,7 +23,10 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vscode/vsce-sign",
-      "keytar"
+      "core-js",
+      "keytar",
+      "spawn-sync",
+      "yo"
     ]
   }
 }
