@@ -1,6 +1,6 @@
 {
   "name": "lead",
-  "displayName": "Lead Intellisense",
+  "displayName": "Lead Programming Language Intellisense",
   "description": "Provides intellisense for the Lead Programming Language",
   "version": "0.0.1",
   "repository": {
