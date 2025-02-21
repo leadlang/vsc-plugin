@@ -1,0 +1,76 @@
+{
+  "name": "lead",
+  "displayName": "Lead Intellisense",
+  "description": "Provides intellisense for the Lead Programming Language",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leadlang/vsc-plugin"
+  },
+  "icon": "./icons/icon.png",
+  "publisher": "leadlang",
+  "engines": {
+    "vscode": "^1.97.0"
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm compile",
+    "compile": "ncc build ./client/src/extension.ts -o ./client/out && ncc build ./server/src/server.ts -o ./server/out",
+    "watch": "ncc build ./client/src/extension.ts -o ./client/out -w & ncc build ./server/src/server.ts -o ./server/out -w",
+    "postinstall": "cd client; pnpm install; cd ../server; pnpm install; cd .."
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./client/out/index",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Lead Intellisense",
+      "properties": {
+        "lead.intellisense.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable intellisense"
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "lead",
+        "icon": {
+          "dark": "icons/lead.svg",
+          "light": "icons/lead.svg"
+        },
+        "aliases": [
+          "Lead",
+          "lead"
+        ],
+        "extensions": [
+          ".pb"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lead",
+        "scopeName": "source.lead",
+        "path": "./syntaxes/lead.tmLanguage.json"
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "scopes": {
+          "templateType": [
+            "entity.name.type.template"
+          ]
+        }
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.4",
+    "typescript": "^5.7.3"
+  }
+}

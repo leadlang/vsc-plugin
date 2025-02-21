@@ -1,0 +1,9 @@
+.vscode/**
+.vscode-test/**
+.gitignore
+vsc-extension-quickstart.md
+**/node_modules/**
+client/*.{json,yaml,tsbuildinfo}
+client/src/*
+server/*.{json,yaml,tsbuildinfo}
+server/src/*

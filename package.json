@@ -1,0 +1,28 @@
+{
+  "name": "al-asm-vccode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd lead && pnpm vsce package"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.3",
+    "@vscode/vsce": "^3.2.2",
+    "generator-code": "^1.11.6",
+    "yo": "^5.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leadlang/vsc-plugin"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@vscode/vsce-sign",
+      "keytar"
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Lead",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "variable.other.lead",
+      "match": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(?!.*::[^:]*$):"
+    },
+    {
+      "name": "entity.name.function.lead",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*\\b(?=\\s*[->&:@$])|\\$[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)+"
+    },
+    {
+      "name": "variable.parameter.lead",
+      "match": "(\\$|->\\$|->&\\$)([a-zA-Z_][a-zA-Z0-9_]*)",
+      "captures": {
+        "1": { "name": "storage.modifier.lead" },
+        "2": { "name": "variable.parameter.lead" }
+      }
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.lead",
+          "match": "^(\\s*(\\*(if|else)\\$[a-zA-Z0-9]+\\s*)+)"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.lead",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.lead",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "comments": {
+      "name": "comment.line.lead",
+      "patterns": [
+        {
+          "name": "comment.line.percentage.lead",
+          "match": "# .*"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.lead"
+}
