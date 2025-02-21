@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd lead && pnpm vsce package"
+    "build": "cd lead && vsce package",
+    "build:release": "cd lead && vsce package && vsce publish"
   },
   "keywords": [],
   "author": "",
