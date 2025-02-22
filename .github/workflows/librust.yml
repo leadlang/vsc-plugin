@@ -79,12 +79,12 @@ jobs:
 
       - name: Build
         run: |
-          rustup toolchain install nightly
-          rustup toolchain install nightly-${{ matrix.target }}
-          rustup target add ${{ matrix.target }}
+          rustup toolchain add nightly --profile minimal
 
-          rustup component add rust-src
-          rustup component add rust-src --toolchain nightly-${{ matrix.target }}
+          rustup target add ${{ matrix.target }} --toolchain nightly || true
+          rustup component add rust-src --toolchain nightly
+
+          rustup default nightly
 
           cd librust
           npm i -g pnpm
