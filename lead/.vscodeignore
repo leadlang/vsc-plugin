@@ -7,3 +7,5 @@ client/*.{json,yaml,tsbuildinfo}
 client/src/*
 server/*.{json,yaml,tsbuildinfo}
 server/src/*
+tsconfig.json
+pnpm-lock.yaml

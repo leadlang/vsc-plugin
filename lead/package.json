@@ -2,7 +2,7 @@
   "name": "lead",
   "displayName": "Lead Programming Language Intellisense",
   "description": "Provides intellisense for the Lead Programming Language",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/leadlang/vsc-plugin"
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm compile",
-    "compile": "ncc build ./client/src/extension.ts -o ./client/out && ncc build ./server/src/server.ts -o ./server/out",
+    "compile": "ncc build -m ./client/src/extension.ts -o ./client/out && ncc build ./server/src/server.ts -o ./server/out -m",
     "watch": "ncc build ./client/src/extension.ts -o ./client/out -w & ncc build ./server/src/server.ts -o ./server/out -w",
     "postinstall": "cd client && pnpm install && cd ../server && pnpm install && cd .."
   },
@@ -22,6 +22,7 @@
     "Programming Languages"
   ],
   "main": "./client/out/index",
+  "browser": "./web",
   "contributes": {
     "configuration": {
       "type": "object",
