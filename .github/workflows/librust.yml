@@ -87,7 +87,7 @@ jobs:
           pnpm install
           pnpm build --target ${{ matrix.target }}
 
-      - name: Publish Leadman SO
+      - name: Publish NAPI Build
         uses: shogo82148/actions-upload-release-asset@v1
         if: runner.os == 'Linux'
         with:
