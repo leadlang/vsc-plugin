@@ -79,7 +79,7 @@ jobs:
 
       - name: Build
         run: |
-          rustup toolchain install stable-${{ matrix.target }}
+          rustup toolchain install nightly-${{ matrix.target }}
 
           cd librust
           npm i -g pnpm
