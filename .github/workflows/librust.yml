@@ -36,7 +36,6 @@ jobs:
         id: release
         with:
           tag_name: ${{ steps.ver.outputs.TAG_NAME }}
-          prerelease: ${{ github.event_name == 'push' }}
           generate_release_notes: true
           release_name: librust v${{ steps.ver.outputs.TAG_NAME }}
           body: librust NodeJS wrapper
