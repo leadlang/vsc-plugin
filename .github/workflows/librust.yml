@@ -25,11 +25,10 @@ jobs:
 
       - name: Get Tag
         run: |
-          cd librust
-
           node ver.cjs
 
-          sh ./build
+          sh ./build.sh
+        working-directory: librust
         id: ver
 
       - name: Create Release
