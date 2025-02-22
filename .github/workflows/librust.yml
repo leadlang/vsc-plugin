@@ -84,6 +84,7 @@ jobs:
           rustup target add ${{ matrix.target }}
 
           rustup component add rust-src
+          rustup component add rust-src --toolchain nightly-${{ matrix.target }}
 
           cd librust
           npm i -g pnpm
