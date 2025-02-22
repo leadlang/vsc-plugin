@@ -33,7 +33,7 @@
       "patterns": [
         {
           "name": "keyword.control.lead",
-          "match": "^(\\s*(\\*(if|else)\\$[a-zA-Z0-9]+\\s*)+)"
+          "match": "^(\\s*(\\*(if|else|mod|run)\\$[a-zA-Z0-9]+\\s*)+)"
         }
       ]
     },
