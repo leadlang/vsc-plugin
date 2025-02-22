@@ -94,7 +94,6 @@ jobs:
 
       - name: Publish NAPI Build
         uses: shogo82148/actions-upload-release-asset@v1
-        if: runner.os == 'Linux'
         with:
           asset_path: ./liblead/index.node
           asset_name: ${{ matrix.target }}.node
