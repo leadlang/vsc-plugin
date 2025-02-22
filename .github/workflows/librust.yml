@@ -29,8 +29,7 @@ jobs:
 
           node ver.cjs
 
-          chmod 777 ./build
-          ./build
+          sh ./build
         id: ver
 
       - name: Create Release

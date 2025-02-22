@@ -13,7 +13,7 @@
     "build": "npm run cargo-build -- --release",
     "cross": "npm run cross-build -- --release"
   },
-  "author": "Lead Language & AHQ",
+  "author": "AHQ",
   "license": "MIT",
   "devDependencies": {
     "@neon-rs/cli": "0.1.82"
