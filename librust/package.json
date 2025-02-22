@@ -1,7 +1,7 @@
 {
   "name": "librust",
   "version": "0.0.1",
-  "description": "",
+  "description": "Support Library for Lead Language Visual Studio Code Extension",
   "main": "index.node",
   "scripts": {
     "test": "cargo test",
