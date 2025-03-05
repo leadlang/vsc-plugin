@@ -11,6 +11,7 @@ import {
   TextDocument
 } from 'vscode-languageserver-textdocument';
 
+let library = null;
 
 // Creates the LSP connection
 const connection = createConnection(ProposedFeatures.all);
@@ -24,11 +25,15 @@ let workspaceFolder: string | null;
 documents.onDidOpen((event) => {
   connection.console.log(`[Server(${process.pid}) ${workspaceFolder}] Document opened: ${event.document.uri}`);
 });
+
 documents.listen(connection);
 
 connection.onInitialize((params) => {
   workspaceFolder = params.rootUri;
   connection.console.log(`[Server(${process.pid}) ${workspaceFolder}] Started and initialize received`);
+
+  connection.window.showWarningMessage("Your current Operating System does not support Lead Lang Intellisense");
+
   return {
     capabilities: {
       textDocumentSync: {

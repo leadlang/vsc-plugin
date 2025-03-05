@@ -4,9 +4,13 @@
   "name": "package",
   "version": "1.0.0",
   "description": "",
-  "authors": ["You"],
+  "authors": [
+    "You"
+  ],
   "keywords": [],
-  "dependencies": {},
+  "dependencies": {
+    "gh:leadlang/leadcord": "latest"
+  },
   "pkver": 1,
   "allowFullAccessToPackagesNamed": []
 }

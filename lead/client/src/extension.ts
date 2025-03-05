@@ -8,7 +8,7 @@ import {
   LanguageClient, LanguageClientOptions, TransportKind
 } from 'vscode-languageclient/node';
 
-let defaultClient: LanguageClient;
+
 const clients = new Map<string, LanguageClient>();
 
 let _sortedWorkspaceFolders: string[] | undefined;
@@ -50,28 +50,11 @@ export function activate(context: ExtensionContext) {
   const module = context.asAbsolutePath(path.join('server', 'out', 'index.js'));
   const outputChannel: OutputChannel = Window.createOutputChannel('Lead Intellisense');
   function didOpenTextDocument(document: TextDocument): void {
-    if (document.languageId !== 'lead' || (document.uri.scheme !== 'file' && document.uri.scheme !== 'untitled')) {
+    if (document.languageId !== 'lead' || document.uri.scheme !== 'file') {
       return;
     }
 
     const uri = document.uri;
-
-    if (uri.scheme === 'untitled' && !defaultClient) {
-      const serverOptions = {
-        run: { module, transport: TransportKind.ipc },
-        debug: { module, transport: TransportKind.ipc }
-      };
-      const clientOptions: LanguageClientOptions = {
-        documentSelector: [
-          { scheme: 'untitled', language: 'lead' }
-        ],
-        diagnosticCollectionName: 'Lead Intellisense',
-        outputChannel: outputChannel
-      };
-      defaultClient = new LanguageClient("leadlang-lsp", "Lead Intellisense", serverOptions, clientOptions);
-      defaultClient.start();
-      return;
-    }
 
     let folder = Workspace.getWorkspaceFolder(uri);
 
@@ -121,10 +104,6 @@ export function activate(context: ExtensionContext) {
 
 export function deactivate(): Thenable<void> {
   const promises: Thenable<void>[] = [];
-
-  if (defaultClient) {
-    promises.push(defaultClient.stop());
-  }
 
   for (const client of clients.values()) {
     promises.push(client.stop());

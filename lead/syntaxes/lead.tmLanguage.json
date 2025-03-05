@@ -16,16 +16,16 @@
       "match": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(?!.*::[^:]*$):"
     },
     {
-      "name": "entity.name.function.lead",
-      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*\\b(?=\\s*[->&:@$])|\\$[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)+"
-    },
-    {
       "name": "variable.parameter.lead",
       "match": "(\\$|->\\$|->&\\$)([a-zA-Z_][a-zA-Z0-9_]*)",
       "captures": {
         "1": { "name": "storage.modifier.lead" },
         "2": { "name": "variable.parameter.lead" }
       }
+    },
+    {
+      "name": "entity.name.function.lead",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b|\\$\\b[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*\\b"
     }
   ],
   "repository": {
@@ -33,7 +33,7 @@
       "patterns": [
         {
           "name": "keyword.control.lead",
-          "match": "^(\\s*(\\*(if|else|mod|run)\\$[a-zA-Z0-9]+\\s*)+)"
+          "match": "^(\\s*(\\*(if|else|mod|run|import)\\$[a-zA-Z0-9.]+\\s*)+)"
         }
       ]
     },
