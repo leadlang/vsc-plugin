@@ -58,7 +58,7 @@ checksum = "07e28edb80900c19c28f1072f2e8aeca7fa06b23cd4169cefe1af5aa3260783f"
 [[package]]
 name = "lead_lang_interpreter"
 version = "0.0.0-dev-lead-lang"
-source = "git+https://github.com/leadlang/lead#86a8599f169ed30d52921d4a7839e40ae9d71a91"
+source = "git+https://github.com/leadlang/lead#caa5bc8dcb2ea35ed744014ab0e6a334d6906fce"
 dependencies = [
  "lealang_chalk_rs",
  "tokio",

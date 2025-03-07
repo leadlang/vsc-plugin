@@ -14,10 +14,17 @@ fn load_all(mut cx: FunctionContext) -> JsResult<JsObject> {
     for (a, b) in pkg.doc.into_iter() {
         for (func, desc) in b.into_iter() {
             let st = cx.string(&a);
+
+            let [regex, ret, desc] = &desc;
+
+            let regex = cx.string(regex);
+            let ret = cx.string(ret);
             let desc = cx.string(desc);
 
             let val = cx.empty_object();
             val.set(&mut cx, "package", st)?;
+            val.set(&mut cx, "regex", regex)?;
+            val.set(&mut cx, "returns", ret)?;
             val.set(&mut cx, "description", desc)?;
 
             out.set(&mut cx, func, val)?;

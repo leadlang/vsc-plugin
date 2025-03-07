@@ -3,7 +3,7 @@ use libloading::Library;
 use std::collections::HashMap;
 
 pub struct Package {
-  pub doc: HashMap<String, HashMap<&'static str, &'static str>>,
+  pub doc: HashMap<String, HashMap<&'static str, &'static [&'static str; 3]>>,
   _inner: Library,
 }
 

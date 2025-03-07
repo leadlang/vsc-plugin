@@ -78,7 +78,13 @@ export function activate(context: ExtensionContext) {
         ],
         diagnosticCollectionName: 'Lead Intellisense',
         workspaceFolder: folder,
-        outputChannel: outputChannel
+        outputChannel: outputChannel,
+        synchronize: {
+          fileEvents: Workspace.createFileSystemWatcher(`**/*.pb`)
+        },
+        initializationOptions: {
+          dir: context.asAbsolutePath(path.join("server", "out"))
+        }
       };
 
       const client = new LanguageClient("leadlang-lsp", "Lead Intellisense", serverOptions, clientOptions);
