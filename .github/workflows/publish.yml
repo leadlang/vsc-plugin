@@ -69,15 +69,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: ./lead/server/out
-
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
 
       - run: |
+          sudo apt install tree
           npm i -g pnpm
           pnpm i
 
@@ -85,6 +82,13 @@ jobs:
           pnpm i
           cd ..
 
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./lead/server/out
+
+      - run: |
+          tree
           pnpm build:release
+        working-directory: lead
         env:
           VSCE_PAT: ${{ secrets.VSCODE_TOKEN }}
