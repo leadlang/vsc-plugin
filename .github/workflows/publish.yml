@@ -54,12 +54,13 @@ jobs:
 
           pnpm install
           pnpm build --target ${{ matrix.target }}
+          mv index.node ${{ matrix.target }}.node
 
       - name: Publish NAPI Build
         uses: actions/upload-artifact@v4
         with:
-          path: ./librust/index.node
-          name: ${{ matrix.target }}.node
+          path: ./librust/${{ matrix.target }}.node
+          compression-level: 0
 
   publish:
     name: Publish
@@ -85,10 +86,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: ./lead/server/out
+          merge-multiple: true
 
       - run: |
           tree
           pnpm build:release
-        working-directory: lead
         env:
           VSCE_PAT: ${{ secrets.VSCODE_TOKEN }}
