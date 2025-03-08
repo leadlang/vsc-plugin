@@ -4,8 +4,8 @@
 vsc-extension-quickstart.md
 **/node_modules/**
 client/*.{json,yaml,tsbuildinfo}
-client/src/*
+client/src/**/*
 server/*.{json,yaml,tsbuildinfo}
-server/src/*
+server/src/**/*
 tsconfig.json
 pnpm-lock.yaml
