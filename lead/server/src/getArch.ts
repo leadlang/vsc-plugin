@@ -38,7 +38,9 @@ export interface Library {
       regex: string,
       returns: string
     }
-  })
+  }),
+  prefix: string,
+  suffix: string
 }
 
 export async function downloadLibrust(con: _Connection, dir: string): Promise<Library> {

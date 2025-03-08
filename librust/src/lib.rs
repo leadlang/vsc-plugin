@@ -1,3 +1,5 @@
+use std::env::consts::{DLL_PREFIX, DLL_SUFFIX};
+
 use neon::prelude::*;
 use utils::Package;
 
@@ -37,6 +39,14 @@ fn load_all(mut cx: FunctionContext) -> JsResult<JsObject> {
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("load_all", load_all)?;
+
+    let prefix = DLL_PREFIX;
+    let prefix = JsString::new(&mut cx, prefix);
+    cx.export_value("prefix", prefix)?;
+
+    let suffix = DLL_SUFFIX;
+    let suffix = JsString::new(&mut cx, suffix);
+    cx.export_value("suffix", suffix)?;
 
     Ok(())
 }

@@ -12,11 +12,13 @@ import {
   TextDocument
 } from 'vscode-languageserver-textdocument';
 import { downloadLibrust, Library } from './getArch';
+import { analyzeCode } from './analyzer';
+import { documentVariableMap } from './analyzer/map';
 
 export let library: Library = null;
 
 // Creates the LSP connection
-const connection = createConnection(ProposedFeatures.all);
+export const connection = createConnection(ProposedFeatures.all);
 
 // Create a manager for open text documents
 const documents = new TextDocuments(TextDocument);
@@ -25,7 +27,16 @@ const documents = new TextDocuments(TextDocument);
 export let workspaceFolder: string | null;
 
 let eventBuffer: TextDocumentChangeEvent<TextDocument>[] = []
+
+documents.onDidClose((event) => {
+  delete documentVariableMap[event.document.uri];
+});
+
 documents.onDidChangeContent(event => eventBuffer.push(event))
+
+connection.onHover(async (params) => {
+  return null;
+})
 
 const setIntervalAysync = (f: () => Promise<void>, d = 1000) => {
   const fn = async () => {
@@ -42,7 +53,8 @@ setIntervalAysync(async () => {
     eventBuffer = []
 
     if (event) {
-      console.log("Firing");
+      connection.console.log(`Workspace: ${workspaceFolder!!}`);
+      await analyzeCode(connection, workspaceFolder!!, event.document);
     }
   }
 }, 1000);
@@ -50,17 +62,17 @@ setIntervalAysync(async () => {
 documents.listen(connection);
 
 connection.onInitialize(async (params) => {
-  workspaceFolder = params.rootUri;
+  workspaceFolder = params.rootPath;
 
   const dir = params.initializationOptions.dir;
 
-  connection.console.log(dir);
   connection.console.log(`[Server(${process.pid}) ${workspaceFolder}] Started and initialize received`);
 
   library = await downloadLibrust(connection, dir);
 
   return {
     capabilities: {
+      hoverProvider: true,
       textDocumentSync: {
         openClose: true,
         change: TextDocumentSyncKind.Incremental

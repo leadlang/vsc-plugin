@@ -1,4 +1,8 @@
 # Let us print "Hello World"
 $toPrint: malloc string "Hello World"
 
-print $toPrint ->$hello
+fmt ->$toPrint
+
+$to: fmt "Hello world ->$toPrint"
+
+$hi: fmt $tom

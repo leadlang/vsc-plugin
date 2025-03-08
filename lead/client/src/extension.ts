@@ -83,7 +83,7 @@ export function activate(context: ExtensionContext) {
           fileEvents: Workspace.createFileSystemWatcher(`**/*.pb`)
         },
         initializationOptions: {
-          dir: context.asAbsolutePath(path.join("server", "out"))
+          dir: path.join(context.extensionPath, "server", "out")
         }
       };
 
