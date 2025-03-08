@@ -1,9 +1,11 @@
 # Change Log
 
-All notable changes to the "lead" extension will be documented in this file.
+[0.0.8]
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Removed some unnecessary `console logs`
+- Maintain CHANGELOG
+- Maintain README.md
 
-## [Unreleased]
+[0.0.7]
 
-- Initial release
+- Added Language Server with `Error Reports`

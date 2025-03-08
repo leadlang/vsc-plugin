@@ -127,7 +127,7 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
       if (Array.isArray(m)) {
         diag.push({
           severity: DiagnosticSeverity.Hint,
-          message: `Variable \`${str}\` was moved here`,
+          message: `Variable \`${str}\` was moved when this function was called`,
           range: {
             start: doc.positionAt(m[1]),
             end: doc.positionAt(m[1] + str.length)
@@ -141,7 +141,7 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
                 },
                 uri: doc.uri
               },
-              message: "You later used here moved here"
+              message: "You later used here \`${str}\` here"
             }
           ]
         });
@@ -193,8 +193,7 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
         };
         break;
       default:
-        console.error("Unknown return type", ret);
+        console.error("[Server]: Unknown return type", ret);
     }
-    console.log(varName);
   }
 }

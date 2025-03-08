@@ -5,4 +5,5 @@ fmt ->$toPrint
 
 $to: fmt "Hello world ->$toPrint"
 
+
 $hi: fmt $tom

@@ -54,6 +54,12 @@ export function activate(context: ExtensionContext) {
       return;
     }
 
+    const config = Workspace.getConfiguration("lead.intellisense");
+
+    if (!config.get("enable")) {
+      return;
+    }
+
     const uri = document.uri;
 
     let folder = Workspace.getWorkspaceFolder(uri);

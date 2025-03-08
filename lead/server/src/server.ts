@@ -53,7 +53,7 @@ setIntervalAysync(async () => {
     eventBuffer = []
 
     if (event) {
-      connection.console.log(`Workspace: ${workspaceFolder!!}`);
+      connection.console.log(`[Workspace]: ${workspaceFolder!!}`);
       await analyzeCode(connection, workspaceFolder!!, event.document);
     }
   }
