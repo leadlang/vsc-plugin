@@ -6,6 +6,7 @@ import path = require("node:path");
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { documentVariableMap, findVariableTypeBeforeN } from "./map";
 import { getVarName } from "./var";
+import { Library } from "../getArch";
 
 let methods: ({
   [key: string]: {
@@ -17,14 +18,26 @@ let methods: ({
 }) = {};
 
 let packages: ({
-  [key: string]: {
-    [key: string]: {
-      package: string;
-      description: string;
-      regex: string;
-      returns: string;
+  [key: string]: ({
+    cmds: {
+      [key: string]: {
+        package: string;
+        description: string;
+        regex: string;
+        returns: string;
+      };
     };
-  };
+    rts: {
+      [key: string]: {
+        [key: string]: {
+          package: string;
+          description: string;
+          regex: string;
+          returns: string;
+        };
+      };
+    };
+  })
 }) = {};
 
 export async function parse(lib: string, w: string, diag: Diagnostic[], data: Split[], doc: TextDocument) {
@@ -35,7 +48,7 @@ export async function parse(lib: string, w: string, diag: Diagnostic[], data: Sp
     .forEach((s) => {
       console.log(`[LeadLang]: Loading (core) ${s}`);
 
-      const lmeth = library.load_all(path.join(lib, s));
+      const lmeth = library.load_all(path.join(lib, s)).cmds;
 
       methods = {
         ...methods,

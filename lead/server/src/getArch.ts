@@ -32,11 +32,23 @@ const getOs = (con: _Connection) => {
 
 export interface Library {
   load_all: (path: string) => ({
-    [key: string]: {
-      package: string,
-      description: string,
-      regex: string,
-      returns: string
+    cmds: {
+      [key: string]: {
+        package: string,
+        description: string,
+        regex: string,
+        returns: string
+      }
+    };
+    rts: {
+      [key: string]: {
+        [key: string]: {
+          package: string,
+          description: string,
+          regex: string,
+          returns: string
+        }
+      }
     }
   }),
   prefix: string,
