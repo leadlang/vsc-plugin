@@ -2,11 +2,11 @@ import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { Split, splitWithIndices } from "./split";
 import { readdirSync } from "node:fs";
 import { connection, library } from "../server";
-import path = require("node:path");
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { documentVariableMap, findVariableTypeBeforeN } from "./map";
 import { getVarName } from "./var";
-import { Library } from "../getArch";
+
+import path = require("node:path");
 
 let methods: ({
   [key: string]: {
@@ -40,13 +40,11 @@ let packages: ({
   })
 }) = {};
 
-export async function parse(lib: string, w: string, diag: Diagnostic[], data: Split[], doc: TextDocument) {
-  documentVariableMap[doc.uri] = {};
-
+function importPkg(lib: string, w: string) {
   methods = {};
   readdirSync(lib)
     .forEach((s) => {
-      console.log(`[LeadLang]: Loading (core) ${s}`);
+      console.log(`[LanguageServer] Importing ${s}`);
 
       const lmeth = library.load_all(path.join(lib, s)).cmds;
 
@@ -70,6 +68,17 @@ export async function parse(lib: string, w: string, diag: Diagnostic[], data: Sp
         }
       });
   } catch (_) { }
+}
+
+let last = 0;
+
+export async function parse(lib: string, w: string, diag: Diagnostic[], data: Split[], doc: TextDocument) {
+  documentVariableMap[doc.uri] = {};
+
+  if (last < Date.now()) {
+    importPkg(lib, w);
+    last = Date.now() + 50_000;
+  }
 
   for (let i = 0; i < data.length; i++) {
     const {
@@ -85,7 +94,7 @@ export async function parse(lib: string, w: string, diag: Diagnostic[], data: Sp
   }
 }
 
-function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument) {
+function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument, conditional = false) {
   const splits = splitWithIndices(trim, " ", index);
 
   const [alloc, caller, whole] = (() => {
@@ -96,9 +105,74 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
     }
   })();
 
+  let docVar = documentVariableMap[doc.uri];
+
+  if (caller.part.startsWith("*if$")) {
+    const startIndex = whole[1].index;
+
+    const data = whole.map(({ part: a }) => a).slice(1).join(" ");
+
+    return read(data, diag, startIndex, doc, true);
+  } else if (caller.part.startsWith("*else$")) {
+    const startIndex = whole[1].index;
+
+    const data = whole.map(({ part: a }) => a).slice(1).join(" ");
+
+    return read(data, diag, startIndex, doc, true);
+  } else if (caller.part == "*import") {
+    console.log(caller.part);
+
+    const toImport = whole.slice(1).map((a) => a.part).join(" ");
+
+    if (alloc.index == -1) {
+      diag.push({
+        message: `Must store the imported library to a variable`,
+        range: {
+          start: doc.positionAt(whole[0].index),
+          end: doc.positionAt(whole[0].part.length + toImport.length + whole[0].index + 1)
+        }
+      });
+      return;
+    }
+
+    const i = whole[1].index;
+
+    const pkg = packages[toImport];
+    if (!pkg) {
+      diag.push({
+        message: `Unknown library \`${toImport}\``,
+        range: {
+          start: doc.positionAt(i),
+          end: doc.positionAt(toImport.length + i)
+        }
+      });
+      return;
+    }
+
+    docVar[caller.part] = {
+      ...(docVar[caller.part] || {}),
+      [i]: {
+        conditional,
+        typ: "rt",
+        pkg
+      }
+    }
+
+    return;
+  } else if (caller.part == "*mod") {
+    // To Parse a *mod
+    return;
+  }
+
   const wholeToMatch = whole.map((s) => s.part).join(" ");
 
-  if (!methods[caller.part]) {
+  let method: {
+    package: string;
+    description: string;
+    regex: string;
+    returns: string;
+  };
+  if (!caller.part.startsWith("$") && !methods[caller.part]) {
     diag.push({
       message: `Unknown function \`${caller.part}\``,
       range: {
@@ -108,26 +182,31 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
     });
 
     return;
-  }
+  } else if (caller.part.startsWith("$")) {
 
-  const method = methods[caller.part];
+    return;
+  } else {
+    method = methods[caller.part];
+  }
 
   const regexp = new RegExp(method.regex, "ig");
 
-  let docVar = documentVariableMap[doc.uri];
   whole.slice(1).forEach((s) => {
     const data = getVarName(s.part, s.index);
 
     data.forEach(([orig, str, i, moves]) => {
       if (moves) {
         if (docVar[str]) {
-          docVar[str][i] = "%null";
+          docVar[str][i] = {
+            conditional,
+            typ: "%null"
+          };
         }
       }
 
-      const m = findVariableTypeBeforeN(doc.uri, str, i);
+      const variable = findVariableTypeBeforeN(doc.uri, str, i);
 
-      if (!m) {
+      if (!variable) {
         diag.push({
           message: `Cannot find variable \`${str}\``,
           range: {
@@ -135,9 +214,9 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
             end: doc.positionAt(i + orig.length),
           }
         });
-      }
+      } else if (variable[0] == "%err:moved") {
+        const m = [, variable[1] as number];
 
-      if (Array.isArray(m)) {
         diag.push({
           severity: DiagnosticSeverity.Hint,
           message: `Variable \`${str}\` was moved when this function was called`,
@@ -177,6 +256,15 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
             }
           ]
         });
+      } else if (variable[1]) {
+        diag.push({
+          severity: DiagnosticSeverity.Information,
+          message: `Variable \`${str}\` might not be always defined`,
+          range: {
+            start: doc.positionAt(i),
+            end: doc.positionAt(i + str.length)
+          }
+        });
       }
     });
   });
@@ -202,7 +290,11 @@ function read(trim: string, diag: Diagnostic[], index: number, doc: TextDocument
       case "\"*\"":
       case "'*'":
         docVar[varName] = {
-          [index]: "%any"
+          ...(docVar[varName] || {}),
+          [index]: {
+            conditional,
+            typ: "%any"
+          }
         };
         break;
       default:

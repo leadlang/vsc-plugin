@@ -2,7 +2,40 @@ export type VariableType = string;
 
 export type Maps = {
   [key: string]: {
-    [key: number]: VariableType
+    [key: number]: {
+      typ: VariableType,
+      conditional: boolean,
+      pkg?: {
+        cmds: {
+          [key: string]: {
+            package: string;
+            description: string;
+            regex: string;
+            returns: string;
+          };
+        };
+        rts: {
+          [key: string]: {
+            [key: string]: {
+              package: string;
+              description: string;
+              regex: string;
+              returns: string;
+            };
+          };
+        };
+      },
+      rtVal?: {
+        [key: string]: {
+          [key: string]: {
+            package: string;
+            description: string;
+            regex: string;
+            returns: string;
+          };
+        };
+      };
+    }
   }
 }
 
@@ -14,7 +47,7 @@ export function findVariableTypeBeforeN(
   uri: string,
   variable: string,
   n: number
-): VariableType | ["%err:moved", number] | null {
+): [VariableType, boolean] | ["%err:moved", number] | null {
   const doc = documentVariableMap[uri];
   if (!doc) return null;
 
@@ -29,11 +62,13 @@ export function findVariableTypeBeforeN(
 
   const nearestPosition = Math.max(...positions);
 
-  const rtype = map[nearestPosition];
+  const mapData = map[nearestPosition];
+
+  const rtype = mapData.typ;
 
   if (rtype == "%null") {
     return ["%err:moved", nearestPosition];
   }
 
-  return rtype;
+  return [rtype, mapData.conditional];
 }

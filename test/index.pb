@@ -1,9 +1,13 @@
 # Let us print "Hello World"
 $toPrint: malloc string "Hello World"
 
-fmt ->$toPrint
-
 $to: fmt "Hello world ->$toPrint"
 
+*if$hi $data: fmt "HelloNow"
+*else$hi $data: fmt "HelloNow"
 
-$hi: fmt $tom
+$data: *import leadcord
+
+print $data
+
+$data::hello hi
